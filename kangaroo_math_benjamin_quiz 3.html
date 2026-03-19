@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kangaroo Math — Benjamin Quiz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh;padding:1rem}
+.wrap{max-width:640px;margin:0 auto;padding-bottom:3rem}
+.card{background:#fff;border:1px solid #e5e3dc;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;font-size:13px;color:#777}
+.pb{height:6px;background:#ece9e1;border-radius:99px;overflow:hidden;margin-bottom:1.5rem}
+.pf{height:100%;background:#3b82f6;border-radius:99px;transition:width .3s}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.tag{font-size:12px;padding:3px 10px;border-radius:8px;font-weight:500}
+.ty{background:#dbeafe;color:#1d4ed8}
+.tr{background:#fee2e2;color:#b91c1c}
+.tn{background:#f1efea;color:#555}
+.qt{font-size:15px;line-height:1.85;color:#1a1a1a;margin-bottom:1.25rem;white-space:pre-wrap}
+.opt{display:flex;align-items:center;gap:12px;width:100%;background:#fff;border:1px solid #d4d0c8;border-radius:9px;padding:12px 14px;font-size:14px;cursor:pointer;text-align:left;color:#1a1a1a;margin-bottom:8px;font-family:inherit;transition:background .1s}
+.opt:hover:not([disabled]){background:#f8f7f4}
+.opt[disabled]{cursor:default}
+.lbl{width:28px;height:28px;border-radius:6px;background:#f1efea;color:#555;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px;flex-shrink:0}
+.opt.sel{border:2px solid #3b82f6;background:#eff6ff}
+.opt.sel .lbl{background:#3b82f6;color:#fff}
+.opt.ok{border:2px solid #16a34a;background:#f0fdf4}
+.opt.ok .lbl{background:#16a34a;color:#fff}
+.opt.ng{border:2px solid #dc2626;background:#fef2f2}
+.opt.ng .lbl{background:#dc2626;color:#fff}
+.opt.dim{opacity:.25}
+.fb{margin-top:.9rem;padding:12px 16px;border-radius:9px;font-size:14px;font-weight:500;line-height:1.5}
+.fb.ok{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
+.fb.ng{background:#fffbeb;color:#92400e;border:1px solid #fcd34d}
+.brow{display:flex;gap:10px;margin-top:1rem}
+.btn{flex:1;padding:12px;border:1px solid #d4d0c8;border-radius:9px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;background:#fff;color:#1a1a1a;transition:background .1s}
+.btn:hover{background:#f8f7f4}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-p{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.btn-p:hover{background:#2563eb}
+.btn-p:disabled{opacity:.35;cursor:not-allowed}
+.expl{background:#fff;border:1px solid #e5e3dc;border-left:3px solid #3b82f6;border-radius:0 14px 14px 0;padding:1.5rem;margin-top:0}
+.expl h3{font-size:14px;font-weight:600;color:#1d4ed8;margin-bottom:.75rem}
+.expl p{font-size:14px;line-height:1.9;color:#1a1a1a;white-space:pre-wrap}
+.sc{text-align:center;padding:2rem 1.5rem}
+.sc h1{font-size:22px;font-weight:600;margin-bottom:.4rem}
+.big{font-size:52px;font-weight:600;color:#1a1a1a;margin:1rem 0 .2rem}
+.big span{font-size:24px;color:#777}
+.sub{font-size:15px;color:#555;margin-bottom:1.5rem}
+.sg{display:flex;gap:10px;margin-bottom:1.25rem}
+.sb{flex:1;background:#f8f7f4;border-radius:9px;padding:1rem;text-align:center;font-size:13px;color:#777}
+.sb strong{display:block;font-size:20px;font-weight:600}
+.bars{display:flex;gap:3px;margin:1rem 0 .4rem}
+.bar{flex:1;height:10px;border-radius:2px}
+.start{text-align:center;padding:2rem 1.5rem}
+.start h1{font-size:22px;font-weight:600;margin-bottom:.3rem}
+.ig{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+.ib{background:#f8f7f4;border-radius:9px;padding:12px 8px;font-size:13px;color:#777;text-align:center}
+.ib strong{display:block;font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.how{background:#f8f7f4;border-radius:9px;padding:1rem;margin-bottom:1.25rem;text-align:left;font-size:13px;line-height:2.1;color:#555}
+.note{font-size:12px;color:#999;margin-top:.4rem;text-align:center}
+.logo{text-align:center;padding:1.5rem 0 .5rem;font-size:13px;color:#aaa;font-weight:500;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="logo">KANGAROO MATH THAILAND · BENJAMIN LEVEL</div>
+ <div id="app"></div>
+</div>
+<script>
+const L=['A','B','C','D','E'];
+const QS=[
+ {y:2024,p:3,t:'Number Theory',q:'Hotel rooms are numbered 1, 2, 3, ... with no gaps.\nWhen Kangaroo counted all the digits:\n• Digit "2" appears exactly 14 times\n• Digit "5" appears exactly 3 times\n\nWhat is the LARGEST possible number of rooms in the hotel?',o:['25','26','34','35','41'],a:2},
+ {y:2024,p:4,t:'Geometry',q:'Two identical rectangles, each with area 18, overlap to form a new rectangle.\nThe new rectangle can be divided into exactly three identical squares.\n\nWhat is the area of the new rectangle?',o:['24','27','30','32','36'],a:1},
+ {y:2024,p:4,t:'Geometry',q:'Rosa draws several identical rectangles to make a pyramid-shaped picture.\nThe full picture is 45 cm wide and 30 cm tall.\n\nWhat is the area of ONE rectangle?',o:['24 cm²','27 cm²','30 cm²','33 cm²','36 cm²'],a:2},
+ {y:2024,p:5,t:'Logic',q:'Simon randomly places 4 cups on 4 matching saucers (one cup per saucer).\nWhich statement is ALWAYS true, no matter how the cups land?',o:['It is certain none of the 4 cups is on its matching saucer','It is certain exactly 1 cup is on its matching saucer','It is impossible for exactly 2 cups to match','It is impossible for exactly 3 cups to match','It is impossible for all 4 cups to match'],a:3},
+ {y:2024,p:5,t:'Algebra',q:'Ava writes a 3-digit number on a whiteboard.\nBrandon writes one more digit to the RIGHT of it, making it 4 digits.\nHe says: "The number just increased by exactly 2024!"\n\nWhat digit did Brandon write?',o:['2','3','4','8','9'],a:3},
+ {y:2024,p:5,t:'Combinatorics',q:'Dan marks cuts to divide a rope into 12 equal pieces.\nMuhammad marks cuts to divide the SAME rope into 16 equal pieces.\nMaya then cuts the rope at ALL marked points.\n\nHow many pieces does Maya get?',o:['24','25','27','28','29'],a:2},
+ {y:2023,p:5,t:'Combinatorics',q:'Martin has 3 cards:\n• Card 1: front = 1, back = 4\n• Card 2: front = 2, back = 5\n• Card 3: front = 3, back = 6\n\nHe places all 3 cards on a table and adds the 3 visible numbers.\nHow many DIFFERENT totals are possible?',o:['3','4','5','6','10'],a:1},
+ {y:2023,p:5,t:'Proportional Reasoning',q:'At a shop:\n• 2 hats cost the same as 5 skirts\n• 3 skirts cost the same as 8 t-shirts\n• 2 t-shirts cost the same as 3 caps\n\nWhich collection is worth the MOST?',o:['1 hat and 5 skirts','1 hat, 3 skirts and 1 cap','8 skirts and 6 t-shirts','37 caps','3 skirts and 3 caps'],a:2},
+ {y:2023,p:5,t:'Game Theory',q:'Sonia and Robert take turns removing 1–5 tiles from a pile.\nThe player who takes the LAST tile LOSES.\n\nThere are 10 tiles left and it is Sonia\'s turn.\nHow many tiles should she leave for Robert to GUARANTEE a win?',o:['9','8','7','6','5'],a:2},
+ {y:2023,p:4,t:'Sequences',q:'In a holiday camp: 7 children eat ice cream every day, 9 eat ice cream every other day. The remaining children never eat ice cream.\n\nYesterday 13 children ate ice cream.\nHow many children will eat ice cream TODAY?',o:['7','8','9','10','11'],a:3},
+ {y:2022,p:3,t:'Arithmetic',q:'Marbles are sold only in packages of 5, 10, or 25.\n\nTom needs to buy exactly 95 marbles.\nWhat is the MINIMUM number of packages he must buy?',o:['4','5','7','8','10'],a:0},
+ {y:2022,p:4,t:'Number Patterns',q:'The year 2022 is "special" — the digit 2 appears three times.\nThis is the THIRD such special year Eva the tortoise has lived through.\n\nWhat is the YOUNGEST age Eva could be at the end of 2022?',o:['18','20','22','23','134'],a:3},
+ {y:2022,p:4,t:'Algebra',q:'Lisa has 4 dogs, each with a different whole-number weight.\nTheir total weight is 60 kg.\nThe SECOND heaviest dog weighs 28 kg.\n\nHow heavy is the THIRD heaviest dog?',o:['2 kg','3 kg','4 kg','5 kg','6 kg'],a:0},
+ {y:2022,p:5,t:'Logic',q:'To unlock a 3-digit lock, you get four hints:\n• Code 682: one digit correct and in right place\n• Code 614: one digit correct but in wrong place\n• Code 206: two digits correct but in wrong places\n• Code 738: all digits incorrect\n\nWhat is the correct code?',o:['604','082','640','042','046'],a:0},
+ {y:2025,p:4,t:'Speed & Ratios',q:'Three turtles race 10 km at constant speeds.\nWhen the first turtle finishes:\n• The second has covered ¼ of the distance\n• The third has covered ⅕ of the distance\n\nHow far from the finish is the THIRD turtle when the SECOND turtle finishes?',o:['1 km','2 km','3 km','4 km','5 km'],a:1},
+ {y:2025,p:5,t:'Systems of Equations',q:'A witch had 10 apples, 9 bananas, 6 pears.\nShe turned EVERY fruit into one of the other two types.\n(Each apple became a banana or pear — never stayed an apple.)\n\nAfterwards: 15 apples, 7 bananas, 3 pears.\nHow many original APPLES did she turn into BANANAS?',o:['3','4','5','6','7'],a:4},
+ {y:2014,p:3,t:'Arithmetic',q:'A cake weighs 900 g. Paul cuts it into 4 pieces.\nThe BIGGEST piece weighs exactly as much as all the other THREE pieces combined.\n\nHow much does the biggest piece weigh?',o:['250 g','300 g','400 g','450 g','600 g'],a:3},
+ {y:2014,p:3,t:'Number',q:'What is the difference between:\n• The SMALLEST 5-digit number, and\n• The LARGEST 4-digit number?',o:['1','10','1,111','9,000','9,900'],a:0},
+ {y:2014,p:3,t:'Arithmetic',q:'Katrin uses ALL 38 matchsticks to make one triangle and one square (no shared sides).\nEach side of the triangle uses exactly 6 matchsticks.\n\nHow many matchsticks make ONE side of the square?',o:['4','5','6','7','8'],a:1},
+ {y:2015,p:3,t:'Arithmetic',q:'Mr Bauer has 10 ducks:\n• 5 ducks lay one egg EVERY DAY\n• 5 ducks lay one egg EVERY SECOND DAY\n\nHow many eggs in total will all 10 ducks have laid after 10 days?',o:['75','60','50','25','10'],a:0}
+];
+const MAX=QS.reduce((s,q)=>s+q.p,0);
+let S={sc:'start',qi:0,sel:null,sub:false,expl:'',lex:false,score:0,ans:[]};
+
+function render(){
+ const app=document.getElementById('app');
+ app.innerHTML='';
+ if(S.sc==='start') renderStart(app);
+ else if(S.sc==='quiz') renderQuiz(app);
+ else renderDone(app);
+}
+
+function mk(tag,cls,html){
+ const e=document.createElement(tag);
+ if(cls) e.className=cls;
+ if(html!==undefined) e.innerHTML=html;
+ return e;
+}
+
+function renderStart(app){
+ const c=mk('div','card');
+ c.innerHTML=`<div class="start">
+  <h1>Kangaroo Math — Benjamin Quiz</h1>
+  <p style="color:#777;font-size:15px;margin-bottom:1.5rem">Past paper practice · 2014–2025</p>
+  <div class="ig">
+   <div class="ib"><strong>20</strong>questions</div>
+   <div class="ib"><strong>6 years</strong>past papers</div>
+   <div class="ib"><strong>3–5 pts</strong>per question</div>
+  </div>
+  <div class="how">
+   <strong>How to use</strong><br>
+   1. Read each question carefully<br>
+   2. Choose your answer (A through E)<br>
+   3. Press Submit to check if you are right<br>
+   4. Press Explain for AI step-by-step help<br>
+   &nbsp;&nbsp;&nbsp;<em style="color:#aaa">(internet required for Explain only)</em>
+  </div>
+ </div>`;
+ const btn=mk('button','btn btn-p');
+ btn.textContent='Start quiz';
+ btn.style.width='100%';
+ btn.onclick=()=>{S.sc='quiz';render()};
+ c.querySelector('.start').appendChild(btn);
+ app.appendChild(c);
+}
+
+function renderQuiz(app){
+ const q=QS[S.qi];
+ const pct=S.qi/QS.length*100;
+ const hdr=mk('div','hdr');
+ hdr.innerHTML=`<span>Question ${S.qi+1} of ${QS.length}</span><span>Score: ${S.score} / ${MAX}</span>`;
+ app.appendChild(hdr);
+ const pb=mk('div','pb');
+ const pf=mk('div','pf');
+ pf.style.width=pct+'%';
+ pb.appendChild(pf);app.appendChild(pb);
+ const card=mk('div','card');
+ const tags=mk('div','tags');
+ tags.innerHTML=`<span class="tag ty">${q.y}</span><span class="tag tr">${q.p} pts</span><span class="tag tn">${q.t}</span>`;
+ card.appendChild(tags);
+ const qt=mk('div','qt');qt.textContent=q.q;
+ card.appendChild(qt);
+ q.o.forEach((opt,i)=>{
+  const btn=mk('button','opt');
+  if(S.sub){
+   btn.disabled=true;
+   if(i===q.a) btn.classList.add('ok');
+   else if(i===S.sel) btn.classList.add('ng');
+   else btn.classList.add('dim');
+  } else if(S.sel===i) btn.classList.add('sel');
+  btn.innerHTML=`<span class="lbl">${L[i]}</span><span>${opt}</span>`;
+  btn.onclick=()=>{if(!S.sub){S.sel=i;render()}};
+  card.appendChild(btn);
+ });
+ if(S.sub){
+  const fb=mk('div','fb');
+  if(S.sel===q.a){
+   fb.className='fb ok';
+   fb.textContent=`Correct! +${q.p} points`;
+  } else {
+   fb.className='fb ng';
+   fb.textContent=`The correct answer is ${L[q.a]}) ${q.o[q.a]}`;
+  }
+  card.appendChild(fb);
+ }
+ const brow=mk('div','brow');
+ if(!S.sub){
+  const sub=mk('button','btn btn-p');
+  sub.textContent='Submit answer';
+  if(S.sel===null) sub.disabled=true;
+  sub.onclick=()=>{
+   S.sub=true;
+   const c=S.sel===q.a;
+   if(c) S.score+=q.p;
+   S.ans.push({c});
+   render();
+  };
+  brow.appendChild(sub);
+ } else {
+  const ex=mk('button','btn');
+  ex.textContent=S.lex?'Loading explanation...':'Explain this question';
+  ex.disabled=S.lex;
+  ex.onclick=getExplain;
+  brow.appendChild(ex);
+  const nx=mk('button','btn btn-p');
+  nx.textContent=S.qi>=QS.length-1?'See my results':'Next question';
+  nx.onclick=()=>{
+   if(S.qi>=QS.length-1){S.sc='done';render();}
+   else{S.qi++;S.sel=null;S.sub=false;S.expl='';S.lex=false;render();}
+  };
+  brow.appendChild(nx);
+ }
+ card.appendChild(brow);
+ app.appendChild(card);
+ if(S.expl){
+  const ec=mk('div','expl');
+  ec.innerHTML='<h3>Step-by-step explanation</h3><p></p>';
+  ec.querySelector('p').textContent=S.expl;
+  app.appendChild(ec);
+ }
+}
+
+async function getExplain(){
+ S.lex=true;S.expl='';render();
+ const q=QS[S.qi];
+ try{
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    model:'claude-sonnet-4-20250514',
+    max_tokens:900,
+    messages:[{role:'user',content:`You are a friendly maths tutor helping a Year 6 student (age 11) prepare for the Kangaroo Math competition. Explain this question clearly and simply.
+
+Question: ${q.q.replace(/\n/g,' ')}
+Correct answer: ${L[q.a]}) ${q.o[q.a]}
+
+Use this format exactly:
+APPROACH: How to think about this problem (1-2 sentences, very simple language)
+SOLUTION: Full step-by-step working with every arithmetic step shown clearly
+KEY INSIGHT: The main trick or idea to remember for similar problems
+
+Keep all language simple and age-appropriate. Show every calculation step. Be encouraging.`}]
+   })
+  });
+  const d=await r.json();
+  S.expl=d.content?.[0]?.text||'Explanation not available. Please check your internet connection and try again.';
+ } catch(e){
+  S.expl='Could not connect. Please check your internet connection and tap Explain again.';
+ }
+ S.lex=false;render();
+}
+
+function renderDone(app){
+ const pct=Math.round(S.score/MAX*100);
+ const ok=S.ans.filter(a=>a.c).length;
+ const msg=pct>=80?'Excellent — you are ready for Kangaroo Math!':
+            pct>=60?'Great work! Review the explanations for the tricky ones.':
+            pct>=40?'Good effort. Use the Explain feature and try again!':
+            'Keep practising — every attempt makes you stronger!';
+ const c=mk('div','card sc');
+ c.innerHTML=`<h1>Quiz complete!</h1>
+  <div class="big">${S.score}<span>/${MAX}</span></div>
+  <p class="sub">${pct}% — ${msg}</p>
+  <div class="sg">
+   <div class="sb"><strong style="color:#16a34a">${ok}</strong>correct</div>
+   <div class="sb"><strong style="color:#dc2626">${QS.length-ok}</strong>incorrect</div>
+   <div class="sb"><strong>${QS.length}</strong>total</div>
+  </div>
+  <div class="bars">${S.ans.map(a=>`<div class="bar" style="background:${a.c?'#bbf7d0':'#fecaca'};border:1px solid ${a.c?'#86efac':'#fca5a5'}"></div>`).join('')}</div>
+  <p style="font-size:12px;color:#aaa;margin-bottom:1.25rem">Green = correct &nbsp;·&nbsp; Red = incorrect</p>`;
+ const btn=mk('button','btn btn-p');
+ btn.textContent='Try again';
+ btn.style.width='100%';
+ btn.onclick=()=>{S={sc:'start',qi:0,sel:null,sub:false,expl:'',lex:false,score:0,ans:[]};render()};
+ c.appendChild(btn);
+ app.appendChild(c);
+}
+
+render();
+</script>
+</body>
+</html>
